@@ -31,16 +31,32 @@ jobs:
           ls hrdf
           echo "~~~~~~ Latest hrdf updates have been copied over. ~~~~~"
 
-
       - name: Remove the hrdf repo
         run: |
           rm -r hebi-hrdf
+
+      - name: Get Current Date
+        id: date 
+        run: echo "::set-output name=date::$(date +'%m-%d-%Y')"
+        # run: echo "::set-outptut name=date::$(now)"
+
+      #TODO: This can be removed
+      - name: Test the name for this commit / pull request
+        env:
+          TODAY_DATE: ${{ steps.date.outputs.date }} 
+        run: echo Updating to HRDF files on $TODAY_DATE
 
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
+          title: HRDF Update (${{ steps.date.outputs.date }})
+          commit-message: HRDF files were updates today (${{ steps.date.outputs.date }}).
           token: ${{ secrets.HARDIK_TOKEN_TEST }}
-          title: Update to list of HRDF files
-          draft: true
+          branch: Automted-HRDF-Update
+          reviewer: HardikSingh97
 
+
+
+
+          
