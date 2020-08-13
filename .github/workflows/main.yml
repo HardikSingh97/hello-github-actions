@@ -12,14 +12,15 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Clone the hrdf repo
-      env:
-        GITHUB_TOKEN: $ {{ secret.HARDIK_TEST_TOKEN }}
-      run: |
-        git config --global user.name 'Hardik Singh'
-        git config --global user.email 'singh.hardik1997@gmail.com'
-        git clone https://github.com/HebiRobotics/hebi-hrdf.git
-        git checkout hardik/actions-setup
-        echo "~~~~~~ We're done with the cloning. ~~~~~"
+        env:
+          GITHUB_TOKEN: $ {{ secret.HARDIK_TEST_TOKEN }}
+        run: |
+          git config --global user.name 'Hardik Singh'
+          git config --global user.email 'singh.hardik1997@gmail.com'
+          echo ${{ github.actor }}
+          git clone https://github.com/HebiRobotics/hebi-hrdf.git
+          git checkout hardik/actions-setup
+          echo "~~~~~~ We're done with the cloning. ~~~~~"
 
       - name: Copy over latest hrdf folder
         run: |
@@ -27,6 +28,5 @@ jobs:
           echo "~~~ The new list of hrdf files: ~~~"
           ls hrdf
           echo "~~~~~~ Latest hrdf updates have been copied over. ~~~~~"
-          echo ${{ github.actor }}
 
 
