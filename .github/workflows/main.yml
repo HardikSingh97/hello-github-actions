@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Download latest HRDF changes 
+    name: Download and PR latest HRDF changes 
     runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
@@ -51,12 +51,12 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           title: HRDF Update (${{ steps.date.outputs.date }})
-          commit-message: HRDF files were updates today (${{ steps.date.outputs.date }}).
+          commit-message: Downloaded latest files from hebi-hrdf (${{ steps.date.outputs.date }})
+          body: Automated updated for HRDF files triggered by an update to hebi-hrdf on ${{ steps.date.outputs.date }}.
           token: ${{ secrets.HARDIK_TOKEN_TEST }}
           branch: Automted-HRDF-Update
-          reviewer: HardikSingh97
+          reviewers: HardikSingh97
+          #TODO: Set reviewers according the the person responsible for the repo
 
 
 
-
-          
