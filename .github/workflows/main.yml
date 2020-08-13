@@ -1,14 +1,32 @@
-name: A Workflow for my Hello World file
-on: push
+# Workflow that, when triggered, will download an HRDF folder into here.
+name: Test Workflow
+on: 
+  push:
+    branches: [test-workflow]
 
 jobs:
   build:
-    name: Hello world action
-    runs-on: ubuntu-latest
+    name: Download latest HRDF changes 
+    runs-on: ubuntu-16.04
     steps:
-      - uses: actions/checkout@v1
-      - uses: ./action-a
-        with:
-          MY_NAME: "Mona"
+      - uses: actions/checkout@v2
+      
+      - name: Clone the hrdf repo
+      env:
+        GITHUB_TOKEN: $ {{ secret.HARDIK_TEST_TOKEN }}
+      run: |
+        git config --global user.name 'Hardik Singh'
+        git config --global user.email 'singh.hardik1997@gmail.com'
+        git clone https://github.com/HebiRobotics/hebi-hrdf.git
+        git checkout hardik/actions-setup
+        echo "~~~~~~ We're done with the cloning. ~~~~~"
+
+      - name: Copy over latest hrdf folder
+        run: |
+          cp -R hebi-hrdf/hrdf .
+          echo "~~~ The new list of hrdf files: ~~~"
+          ls hrdf
+          echo "~~~~~~ Latest hrdf updates have been copied over. ~~~~~"
+          echo ${{ github.actor }}
 
 
