@@ -35,10 +35,14 @@ jobs:
         run: |
           rm -r hebi-hrdf
 
-      - name: Get Current Date
+      - name: Get current date
         id: date 
         run: echo "::set-output name=date::$(date +'%m-%d-%Y')"
         # run: echo "::set-outptut name=date::$(now)"
+
+      - name: Get curren time
+        id: datetime
+        run: echo "::set-output name=datetime::$(date)"
 
       #TODO: This can be removed
       - name: Test the name for this commit / pull request
@@ -51,7 +55,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           title: HRDF Update (${{ steps.date.outputs.date }})
-          commit-message: Downloaded latest files from hebi-hrdf (${{ steps.date.outputs.date }})
+          commit-message: Downloaded latest files from hebi-hrdf (${{ steps.date.outputs.datetime }})
           body: Automated updated for HRDF files triggered by an update to hebi-hrdf on ${{ steps.date.outputs.date }}.
           token: ${{ secrets.HARDIK_TOKEN_TEST }}
           branch: Automted-HRDF-Update
