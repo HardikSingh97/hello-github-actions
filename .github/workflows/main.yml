@@ -1,8 +1,11 @@
 # Workflow that, when triggered, will download an HRDF folder into here.
 name: Test Workflow
 on: 
+  repository_dispatch:
+    types: [hrdf-auto-pr]
   push:
     branches: [test-workflow]
+      
 
 jobs:
   build:
