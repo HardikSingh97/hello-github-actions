@@ -1,14 +1,67 @@
-name: A Workflow for my Hello World file
-on: push
+# Workflow that, when triggered, will download an HRDF folder into here.
+name: Test Workflow
+on: 
+  repository_dispatch:
+    types: [hrdf-auto-pr]
+  push:
+    branches: [test-workflow]
+      
 
 jobs:
   build:
-    name: Hello world action
-    runs-on: ubuntu-latest
+    name: Download and PR latest HRDF changes 
+    runs-on: ubuntu-16.04
     steps:
-      - uses: actions/checkout@v1
-      - uses: ./action-a
+      - uses: actions/checkout@v2
+      
+      - name: Clone the hrdf repo
+        env:
+          GITHUB_TOKEN: $ {{ secret.HARDIK_TEST_TOKEN }}
+        run: |
+          git config --global user.name 'Hardik Singh'
+          git config --global user.email 'singh.hardik1997@gmail.com'
+          echo ${{ github.actor }}
+          git clone https://github.com/HebiRobotics/hebi-hrdf.git
+          cd hebi-hrdf
+          git checkout hardik/actions-setup
+          cd ..
+          echo "~~~~~~ We're done with the cloning. ~~~~~"
+
+      - name: Copy over latest hrdf folder
+        run: |
+          cp -R hebi-hrdf/hrdf .
+          echo "~~~ The new list of hrdf files: ~~~"
+          ls hrdf
+          echo "~~~~~~ Latest hrdf updates have been copied over. ~~~~~"
+
+      - name: Remove the hrdf repo
+        run: |
+          rm -r hebi-hrdf
+
+      - name: Get current date
+        id: date 
+        run: |
+          echo "::set-output name=date::$(date +'%m-%d-%Y')"
+          echo "::set-output name=datetime::$(date)"
+        # run: echo "::set-outptut name=date::$(now)"
+
+      #TODO: This can be removed
+      - name: Test the name for this commit / pull request
+        env:
+          TODAY_DATE: ${{ steps.date.outputs.date }} 
+        run: echo Updating to HRDF files on $TODAY_DATE
+
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
         with:
-          MY_NAME: "Mona"
+          title: HRDF Update (${{ steps.date.outputs.date }})
+          commit-message: Downloaded latest files from hebi-hrdf (${{ steps.date.outputs.datetime }})
+          body: Automated updated for HRDF files triggered by an update to hebi-hrdf on ${{ steps.date.outputs.date }}.
+          token: ${{ secrets.HARDIK_TOKEN_TEST }}
+          branch: Automted-HRDF-Update
+          reviewers: HardikSingh97
+          #TODO: Set reviewers according the the person responsible for the repo
+
 
 
