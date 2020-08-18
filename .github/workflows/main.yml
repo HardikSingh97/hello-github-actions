@@ -22,6 +22,9 @@ jobs:
           git config --global user.email 'singh.hardik1997@gmail.com'
           echo ${{ github.actor }}
           git clone https://github.com/HebiRobotics/hebi-hrdf.git
+          cd hebi-hrdf
+          git checkout hardik/actions-setup
+          cd ..
           echo "~~~~~~ We're done with the cloning. ~~~~~"
 
       - name: Copy over latest hrdf folder
