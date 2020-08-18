@@ -4,7 +4,7 @@ on:
   repository_dispatch:
     types: [hrdf-auto-pr]
   push:
-    branches: [test-workflow]
+    branches: [master]
       
 
 jobs:
