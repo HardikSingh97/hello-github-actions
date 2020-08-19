@@ -15,8 +15,6 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Clone the hrdf repo
-        env:
-          GITHUB_TOKEN: $ {{ secret.HARDIK_TEST_TOKEN }}
         run: |
           git config --global user.name 'Hardik Singh'
           git config --global user.email 'singh.hardik1997@gmail.com'
@@ -43,20 +41,15 @@ jobs:
           echo "::set-output name=date::$(date +'%m-%d-%Y')"
           echo "::set-output name=datetime::$(date)"
 
-      - name: Test the name for this commit / pull request
-        env:
-          TODAY_DATE: ${{ steps.date.outputs.date }} 
-        run: echo Updating to HRDF files on $TODAY_DATE
-
-
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v3.0.1
         with:
           title: HRDF Update (${{ steps.date.outputs.date }})
           commit-message: Downloaded latest files from hebi-hrdf (${{ steps.date.outputs.datetime }})
           body: Automated updated for HRDF files triggered by an update to hebi-hrdf on ${{ steps.date.outputs.date }}.
           token: ${{ secrets.HARDIK_TOKEN_TEST }}
           branch: Automted-HRDF-Update
+          
 
           #TODO: Set reviewers according the the person responsible for the repo
 
